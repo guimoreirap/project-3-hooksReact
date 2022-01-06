@@ -1,39 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const eventFn = () => {
+  console.log('H1 was clicked');
+};
 
 function App() {
-  const [reverse, setReverse] = useState(false);
   const [counter, setCounter] = useState(0);
-  const reverseClass = reverse ? 'reverse' : '';
+  const [counter2, setCounter2] = useState(0);
 
-  const handleClick = () => {
-    setReverse((reverse) => !reverse);
-  };
+  /*  //Igual ao componentDidUpdate - executa sempre ao atualizar
+  useEffect(() => {
+    console.log('componentDidUpdate');
+  });
 
-  const handleIncrement = () => {
-    setCounter((c) => c + 1);
-  };
+  //Igual ao componentDidMount - executa 1x
+  useEffect(() => {
+    console.log('componentDidMount');
+  }, []); */
+
+  //Com dependencia - executa toda vez que a dependencia mudar
+  useEffect(() => {
+    console.log('C1:', counter, 'C2:', counter2);
+  }, [counter, counter2]);
+
+  useEffect(() => {
+    document.querySelector('h1')?.addEventListener('click', eventFn);
+
+    //componentWillUnmount - limpeza
+    return () => {
+      document.querySelector('h1')?.removeEventListener('click', eventFn);
+    };
+  }, []);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className={`App-logo ${reverseClass}`} alt="logo" />
-
-        <h1>Contador: {counter}</h1>
-
-        <p>
-          <button type="button" onClick={handleClick}>
-            Reverse {reverseClass}
-          </button>
-        </p>
-
-        <p>
-          <button type="button" onClick={handleIncrement}>
-            Increment {counter}
-          </button>
-        </p>
-      </header>
+      <p>Teste 5</p>
+      <h1>
+        C1: {counter} C2: {counter2}
+      </h1>
+      <button onClick={() => setCounter(counter + 1)}>+</button>
+      <button onClick={() => setCounter2(counter2 + 1)}>+</button>
     </div>
   );
 }
